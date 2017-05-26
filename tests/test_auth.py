@@ -1,6 +1,6 @@
 import json
 
-from http.client import BAD_REQUEST, OK, UNAUTHORIZED
+from http.client import BAD_REQUEST, NO_CONTENT, UNAUTHORIZED
 
 from tests.test_case import TestCase
 from tests.test_utils import add_user
@@ -23,7 +23,7 @@ class TestAuth(TestCase):
         resp = self.app.post(AUTH_API_ENDPOINT, data=data,
                              content_type='application/json')
 
-        assert resp.status_code == OK
+        assert resp.status_code == NO_CONTENT
 
     def test_post_auth__wrong_password(self):
         user = add_user('user@email.com', TEST_USER_PASSWORD)
@@ -37,6 +37,18 @@ class TestAuth(TestCase):
                              content_type='application/json')
 
         assert resp.status_code == UNAUTHORIZED
+
+    def test_post_auth__malformed_data(self):
+
+        data = json.dumps({
+            "email": "user@email.com",
+            "pwd": TEST_USER_PASSWORD,
+        })
+
+        resp = self.app.post(AUTH_API_ENDPOINT, data=data,
+                             content_type='application/json')
+
+        assert resp.status_code == BAD_REQUEST
 
     def test_post_auth__non_existing_user(self):
 

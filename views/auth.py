@@ -15,6 +15,10 @@ class LoginHandler(Resource):
 
     def post(self):
         request_data = request.get_json(force=True)
+
+        if 'email' not in request_data or 'password' not in request_data:
+            return generate_response({}, client.BAD_REQUEST)
+
         email = request_data['email']
         password = request_data['password']
 
@@ -27,4 +31,4 @@ class LoginHandler(Resource):
             abort(client.UNAUTHORIZED)
 
         login_user(user)
-        return generate_response({}, client.OK)
+        return generate_response({}, client.NO_CONTENT)
