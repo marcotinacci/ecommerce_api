@@ -34,4 +34,4 @@ class LoginHandler(Resource):
             abort(client.UNAUTHORIZED)
 
         login_user(user)
-        return generate_response({}, client.OK)
+        return generate_response({'success': True}, client.OK)
